@@ -8,6 +8,18 @@ pipeline{
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        
         stage('Build Docker Image'){
             steps{
                 sh "docker build -t peyushxcode/mini-devops-app:${BUILD_NUMBER} ."
