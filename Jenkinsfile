@@ -40,7 +40,9 @@ pipeline{
             steps{
                 sh 'docker stop mini-test || true'
                 sh 'docker rm -f mini-test || true'
+                sh "docker pull peyushxcode/mini-devops-app:${BUILD_NUMBER}"
                 sh "docker run -d -p 3000:3000 --name mini-test peyushxcode/mini-devops-app:${BUILD_NUMBER}"
+                sh 'docker image prune -f'
             }
         }
     }
