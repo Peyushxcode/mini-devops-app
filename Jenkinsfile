@@ -16,6 +16,7 @@ pipeline{
             }
             steps{
                 sh 'npm install'
+                sh 'npm audit --audit-level=high'
                 sh 'npm test'
             }
         }
