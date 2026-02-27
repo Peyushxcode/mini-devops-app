@@ -21,6 +21,30 @@ pipeline{
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
+                    withSonarQubeEnv('SonarQube') {
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=mini-devops-app \
+                        -Dsonar.sources=. \
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        
         stage('Build Docker Image'){
             steps{
                 sh "docker build -t peyushxcode/mini-devops-app:${BUILD_NUMBER} ."
@@ -58,5 +82,6 @@ pipeline{
                 sh 'docker image prune -f'
             }
         }
+
     }
 }
