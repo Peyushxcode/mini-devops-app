@@ -8,18 +8,18 @@ pipeline{
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
+        stage('Install & Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                }
             }
-        }
-
-        stage('Unit Test') {
-            steps {
+            steps{
+                sh 'npm install'
                 sh 'npm test'
             }
         }
-        
+
         stage('Build Docker Image'){
             steps{
                 sh "docker build -t peyushxcode/mini-devops-app:${BUILD_NUMBER} ."
